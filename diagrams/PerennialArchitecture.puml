@@ -30,9 +30,7 @@ skinparam artifact {
 /' Actors '/
 actor Liquidators
 actor Makers
-note left: Liquidity Providers
 actor Takers
-note left: Traders
 actor "Market Operator" as MarketOperator
 actor Admin
 
@@ -41,7 +39,6 @@ actor Admin
 ////////////////////////////////////////////////////////////////// '/
 
 collections Market
-note right: In V1 known as Product
 
 component Collateral {
     artifact Placeholder1
@@ -50,7 +47,6 @@ component Collateral {
 component MultiInvoker {
     artifact Placeholder2
 }
-note right: Allows batch calls
 
 component ChainlinkOracle {
     artifact Placeholder3
@@ -77,9 +73,7 @@ rectangle deposit <<depositTo>>
 rectangle withdraw <<withdrawTo && withdrawFrom>>
 rectangle liquidate <<liquidate>>
 rectangle "Settle Account" as settleAccount <<settleAccount>>
-note bottom of settleAccount: Moves collateral within the product 
 rectangle "Settle Product" as settleProduct <<settleProduct>>
-note top: Removes collateral\nfrom the product as fees
 rectangle "Resolve Shortfall" as resolveShortfall <<resolveShortfall>>
 
 /'Market'/
@@ -115,6 +109,17 @@ Makers --> openMake
 Makers --> closeMake 
 Takers --> openTake
 Takers --> closeTake
+
+/' //////////////////////////////////////////////////////////////////
+//                             Notes                               //
+////////////////////////////////////////////////////////////////// '/
+
+note bottom of settleAccount: Moves collateral within the product 
+note top of settleProduct: Removes collateral\nfrom the product as fees
+note right of MultiInvoker: Allows batch calls
+note right of Market: In V1 known as Product
+note left of Makers: Liquidity Providers
+note left of Takers: Traders
 
 footer Perennial Protocol Architecture | author: @kamilchmielu
 @enduml
