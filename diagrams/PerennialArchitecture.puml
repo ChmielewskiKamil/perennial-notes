@@ -1,0 +1,108 @@
+@startuml PerennialArchitecture
+
+left to right direction
+
+skinparam linetype ortho
+skinparam nodesep 50
+skinparam ranksep 60
+
+skinparam note {
+    BorderColor black
+    BackgroundColor white
+    FontColor black
+}
+skinparam component {
+    FontSize 20
+}
+
+skinparam collections {
+    FontSize 20
+}
+
+'Invisible Placeholder'
+skinparam artifact {
+    BorderColor invisible
+    BackgroundColor transparent
+    FontSize 10
+    FontColor transparent
+}
+
+/' Actors '/
+actor Liquidators
+actor Makers
+note left: Liquidity Providers
+actor Takers
+note left: Traders
+actor "Market Operator" as MarketOperator
+actor Admin
+
+/' System Components '/
+collections Market
+note right: In V1 known as Product
+
+component Collateral {
+    artifact Placeholder1
+}
+
+component MultiInvoker {
+    artifact Placeholder2
+}
+note right: Allows batch calls
+
+component ChainlinkOracle {
+    artifact Placeholder3
+}
+
+component Incentivizer {
+    artifact Placeholder4
+}
+
+component Controller {
+    artifact Placeholder5
+}
+
+component ProductProvider {
+    artifact Placeholder6
+}
+
+
+
+/'Functions called by Makers'/
+rectangle Deposit <<depositTo>>
+rectangle Withdraw <<withdrawTo>>
+rectangle "Open Make Position" <<openMake>>
+rectangle "Close Make Position" <<closeMake>>
+
+/'Functions called by Takers'/
+rectangle "Open Take Position" <<openTake>>
+rectangle "Close Take Position" <<closeTake>>
+
+/'Functions called by Liquidators'/
+rectangle Liquidate <<liquidate>>
+
+/' Connections '/
+
+'Collateral functions'
+Deposit --> Collateral
+Withdraw --> Collateral
+Liquidate --> Collateral
+'Users calling collateral functions'
+Makers --> Deposit
+Makers --> Withdraw
+Liquidators --> Liquidate
+
+'Market (Product) functions'
+"Open Make Position" --> Market
+"Close Make Position" --> Market
+"Open Take Position" --> Market
+"Close Take Position" --> Market
+'Users calling market functions'
+Makers --> "Open Make Position"
+Makers --> "Close Make Position"
+Takers --> "Open Take Position"
+Takers --> "Close Take Position"
+
+
+footer Perennial Protocol Architecture | author: @kamilchmielu
+@enduml
+
