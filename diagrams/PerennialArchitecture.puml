@@ -36,7 +36,10 @@ note left: Traders
 actor "Market Operator" as MarketOperator
 actor Admin
 
-/' System Components '/
+/' //////////////////////////////////////////////////////////////////
+//                           Core Contracts                        //
+////////////////////////////////////////////////////////////////// '/
+
 collections Market
 note right: In V1 known as Product
 
@@ -69,27 +72,21 @@ component ProductProvider {
 //                       Contract Functions                        //
 ////////////////////////////////////////////////////////////////// '/
 
-/'Collateral contract functions'/
+/'Collateral'/
 rectangle deposit <<depositTo>>
 rectangle withdraw <<withdrawTo && withdrawFrom>>
-rectangle "Open Make Position" as openMake <<openMake>>
-rectangle "Close Make Position" as closeMake <<closeMake>>
-
-/'Functions called by Takers'/
-rectangle "Open Take Position" as openTake <<openTake>>
-rectangle "Close Take Position" as closeTake <<closeTake>>
-
-/'Functions called by Liquidators'/
 rectangle liquidate <<liquidate>>
-
-/'Functions called by the Market'/
 rectangle "Settle Account" as settleAccount <<settleAccount>>
-note bottom: Moves collateral within the product 
+note bottom of settleAccount: Moves collateral within the product 
 rectangle "Settle Product" as settleProduct <<settleProduct>>
 note top: Removes collateral\nfrom the product as fees
-
-/'Functions called by the Market Owners'/
 rectangle "Resolve Shortfall" as resolveShortfall <<resolveShortfall>>
+
+/'Market'/
+rectangle "Open Take Position" as openTake <<openTake>>
+rectangle "Close Take Position" as closeTake <<closeTake>>
+rectangle "Open Make Position" as openMake <<openMake>>
+rectangle "Close Make Position" as closeMake <<closeMake>>
 
 /' //////////////////////////////////////////////////////////////////
 //                           Connections                           //
@@ -119,7 +116,5 @@ Makers --> closeMake
 Takers --> openTake
 Takers --> closeTake
 
-
 footer Perennial Protocol Architecture | author: @kamilchmielu
 @enduml
-
