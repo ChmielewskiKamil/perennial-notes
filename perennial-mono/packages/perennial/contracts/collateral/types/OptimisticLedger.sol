@@ -16,6 +16,7 @@ struct OptimisticLedger {
 }
 using OptimisticLedgerLib for OptimisticLedger global;
 
+// @info FCFS - First Come First Serve
 /**
  * @title OptimisticLedgerLib
  * @notice Library that manages a global vs account ledger where the global ledger is settled separately,
