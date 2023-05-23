@@ -65,42 +65,59 @@ component ProductProvider {
     artifact Placeholder6
 }
 
+/' //////////////////////////////////////////////////////////////////
+//                       Contract Functions                        //
+////////////////////////////////////////////////////////////////// '/
 
-
-/'Functions called by Makers'/
-rectangle Deposit <<depositTo>>
-rectangle Withdraw <<withdrawTo>>
-rectangle "Open Make Position" <<openMake>>
-rectangle "Close Make Position" <<closeMake>>
+/'Collateral contract functions'/
+rectangle deposit <<depositTo>>
+rectangle withdraw <<withdrawTo && withdrawFrom>>
+rectangle "Open Make Position" as openMake <<openMake>>
+rectangle "Close Make Position" as closeMake <<closeMake>>
 
 /'Functions called by Takers'/
-rectangle "Open Take Position" <<openTake>>
-rectangle "Close Take Position" <<closeTake>>
+rectangle "Open Take Position" as openTake <<openTake>>
+rectangle "Close Take Position" as closeTake <<closeTake>>
 
 /'Functions called by Liquidators'/
-rectangle Liquidate <<liquidate>>
+rectangle liquidate <<liquidate>>
 
-/' Connections '/
+/'Functions called by the Market'/
+rectangle "Settle Account" as settleAccount <<settleAccount>>
+note bottom: Moves collateral within the product 
+rectangle "Settle Product" as settleProduct <<settleProduct>>
+note top: Removes collateral\nfrom the product as fees
 
-'Collateral functions'
-Deposit --> Collateral
-Withdraw --> Collateral
-Liquidate --> Collateral
-'Users calling collateral functions'
-Makers --> Deposit
-Makers --> Withdraw
-Liquidators --> Liquidate
+/'Functions called by the Market Owners'/
+rectangle "Resolve Shortfall" as resolveShortfall <<resolveShortfall>>
 
-'Market (Product) functions'
-"Open Make Position" --> Market
-"Close Make Position" --> Market
-"Open Take Position" --> Market
-"Close Take Position" --> Market
-'Users calling market functions'
-Makers --> "Open Make Position"
-Makers --> "Close Make Position"
-Takers --> "Open Take Position"
-Takers --> "Close Take Position"
+/' //////////////////////////////////////////////////////////////////
+//                           Connections                           //
+////////////////////////////////////////////////////////////////// '/
+
+'Connections to Collateral contract (Collateral contract functions)'
+deposit --> Collateral
+withdraw --> Collateral
+liquidate --> Collateral
+settleAccount --> Collateral
+settleProduct --> Collateral
+'Calls to Collateral contract functions'
+Makers --> deposit
+Makers --> withdraw
+Liquidators --> liquidate
+Market --> settleAccount 
+Market --> settleProduct 
+
+'Connections to Market contract (Market functions)'
+openMake --> Market
+closeMake --> Market
+openTake --> Market
+closeTake --> Market
+'Calls to Market contract functions'
+Makers --> openMake 
+Makers --> closeMake 
+Takers --> openTake
+Takers --> closeTake
 
 
 footer Perennial Protocol Architecture | author: @kamilchmielu
