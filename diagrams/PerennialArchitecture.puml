@@ -70,45 +70,64 @@ component ProductProvider {
 
 /'Collateral'/
 rectangle deposit <<depositTo>>
-rectangle withdraw <<withdrawTo && withdrawFrom>>
+rectangle withdrawFrom <<withdrawFrom>>
+rectangle withdrawTo <<withdrawTo>>
 rectangle liquidate <<liquidate>>
 rectangle "Settle Account" as settleAccount <<settleAccount>>
 rectangle "Settle Product" as settleProduct <<settleProduct>>
 rectangle "Resolve Shortfall" as resolveShortfall <<resolveShortfall>>
+rectangle "Claim Fees" as claimFee <<claimFee>>
 
 /'Market'/
 rectangle "Open Take Position" as openTake <<openTake>>
 rectangle "Close Take Position" as closeTake <<closeTake>>
 rectangle "Open Make Position" as openMake <<openMake>>
 rectangle "Close Make Position" as closeMake <<closeMake>>
+rectangle "Settle" as settle <<settle>>
+rectangle "Close All Positions" as closeAll <<closeAll>>
+rectangle "Close / Open Market" as updateClosed <<updateClosed>>
+rectangle "Update Market Oracle" as updateOracle <<updateOracle>>
 
 /' //////////////////////////////////////////////////////////////////
 //                           Connections                           //
 ////////////////////////////////////////////////////////////////// '/
 
-'Connections to Collateral contract (Collateral contract functions)'
+'Collateral contract functions'
 deposit --> Collateral
-withdraw --> Collateral
+withdrawTo --> Collateral
+withdrawFrom --> Collateral
+withdrawTo --> withdrawFrom
 liquidate --> Collateral
 settleAccount --> Collateral
 settleProduct --> Collateral
+claimFee --> Collateral
+resolveShortfall --> Collateral
 'Calls to Collateral contract functions'
 Makers --> deposit
-Makers --> withdraw
+Makers --> withdrawTo
+Makers --> withdrawFrom
 Liquidators --> liquidate
 Market --> settleAccount 
 Market --> settleProduct 
+MarketOperator --> resolveShortfall
 
-'Connections to Market contract (Market functions)'
+'Market functions'
 openMake --> Market
 closeMake --> Market
 openTake --> Market
 closeTake --> Market
+settle --> Market
+closeAll --> Market
+updateClosed --> Market
+updateOracle --> Market
 'Calls to Market contract functions'
 Makers --> openMake 
 Makers --> closeMake 
 Takers --> openTake
 Takers --> closeTake
+Collateral --> closeAll
+MarketOperator --> updateClosed
+MarketOperator --> updateOracle
 
 /' //////////////////////////////////////////////////////////////////
 //                             Notes                               //
@@ -120,6 +139,7 @@ note right of MultiInvoker: Allows batch calls
 note right of Market: In V1 known as Product
 note left of Makers: Liquidity Providers
 note left of Takers: Traders
+note bottom of resolveShortfall: Market Operator or Insurer can re-capitalize insolvent market
 
 footer Perennial Protocol Architecture | author: @kamilchmielu
 @enduml
