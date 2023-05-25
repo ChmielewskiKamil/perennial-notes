@@ -19,13 +19,6 @@ skinparam collections {
     FontSize 20
 }
 
-'Invisible Placeholder'
-skinparam artifact {
-    BorderColor invisible
-    BackgroundColor transparent
-    FontSize 10
-    FontColor transparent
-}
 <style>
 .protocolParams {
     FontSize 20
@@ -50,27 +43,21 @@ actor Pauser
 collections Market
 
 component Collateral {
-    artifact Placeholder1
 }
 
 component MultiInvoker {
-    artifact Placeholder2
 }
 
 component ChainlinkOracle {
-    artifact Placeholder3
 }
 
 component Incentivizer {
-    artifact Placeholder4
 }
 
 component Controller {
-    artifact Placeholder5
 }
 
 component ProductProvider {
-    artifact Placeholder6
 }
 
 /' //////////////////////////////////////////////////////////////////
