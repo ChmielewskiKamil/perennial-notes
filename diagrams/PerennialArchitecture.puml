@@ -3,8 +3,8 @@
 left to right direction
 
 skinparam linetype ortho
-skinparam nodesep 50
-skinparam ranksep 60
+skinparam nodesep 40
+skinparam ranksep 40
 
 skinparam note {
     BorderColor black
@@ -12,21 +12,18 @@ skinparam note {
     FontColor black
 }
 skinparam component {
-    FontSize 20
+    FontSize 25
+    BackgroundColor lightgray
 }
 
 skinparam collections {
     FontSize 20
 }
 
-<style>
-.protocolParams {
-    FontSize 20
+skinparam package {
     BorderColor black
     BackgroundColor lightblue
-    Padding 10
 }
-</style>
 
 /' Actors '/
 actor Liquidators
@@ -40,25 +37,19 @@ actor Pauser
 //                           Core Contracts                        //
 ////////////////////////////////////////////////////////////////// '/
 
-collections Market
+component Market
 
-component Collateral {
-}
+component Collateral
 
-component MultiInvoker {
-}
+component MultiInvoker 
 
-component ChainlinkOracle {
-}
+component ChainlinkOracle 
 
-component Incentivizer {
-}
+component Incentivizer 
 
-component Controller {
-}
+component Controller 
 
-component ProductProvider {
-}
+component ProductProvider 
 
 /' //////////////////////////////////////////////////////////////////
 //                       Contract Functions                        //
@@ -88,7 +79,7 @@ rectangle "Update Market Oracle" as updateOracle <<updateOracle>>
 rectangle "Add new Product Provider" as createCoordinator <<createCoordinator>>
 rectangle "Update the owner of the Product Provider" as updateCoordinator <<updateCoordinatorPendingOwner>>
 rectangle "Update the treasury address of the Product Provider" as updateTreasury <<updateCoordinatorTreasury>>
-rectangle "Update Protocol Parameters" as UPDATE_PROTOCOL_PARAMS <<protocolParams>> {
+rectangle "Updating Core Protocol Parameters" as UPDATE_PROTOCOL_PARAMS {
     rectangle "Update Collateral contract address" as updateCollateral <<updateCollateral>>
     rectangle "Update Incentivizer contract address" as updateIncentivizer <<updateIncentivizer>>
     rectangle "Update Product Implementation Beacon" as updateProductBeacon <<updateProductBeacon>>
@@ -148,30 +139,15 @@ MarketOperator --> updateOracle
 createCoordinator --> Controller
 updateCoordinator --> Controller
 updateTreasury --> Controller
-updateCollateral --> Controller
-updateIncentivizer --> Controller
+UPDATE_PROTOCOL_PARAMS --> Controller
+pause --> Controller
 
 'Calls to Controller functions'
 ProductProvider --> createCoordinator: ?
 ProductProvider --> updateCoordinator
 ProductProvider --> updateTreasury
-Admin --> updateCollateral
-Admin --> updateIncentivizer
+Admin --> UPDATE_PROTOCOL_PARAMS
 Pauser --> pause
-Admin --> updateProtocolFee
-Admin --> updateMinFundingRate
-Admin --> updateLiquidationFee
-Admin --> updateIncentivizationFee
-Admin --> updateMinCollateral
-Admin --> updateProgramsPerProduct
-Admin --> updateMultiInvoker
-Admin --> updateProductBeacon
-Admin --> updatePauser
-
-'Other'
-updatePauser --> Pauser
-updateMultiInvoker --> MultiInvoker
-updateIncentivizer --> Incentivizer
 
 /' //////////////////////////////////////////////////////////////////
 //                             Notes                               //
