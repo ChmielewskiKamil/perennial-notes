@@ -26,6 +26,14 @@ skinparam artifact {
     FontSize 10
     FontColor transparent
 }
+<style>
+.protocolParams {
+    FontSize 20
+    BorderColor black
+    BackgroundColor lightblue
+    Padding 10
+}
+</style>
 
 /' Actors '/
 actor Liquidators
@@ -33,6 +41,7 @@ actor Makers
 actor Takers
 actor "Market Operator" as MarketOperator
 actor Admin
+actor Pauser
 
 /' //////////////////////////////////////////////////////////////////
 //                           Core Contracts                        //
@@ -88,6 +97,25 @@ rectangle "Close All Positions" as closeAll <<closeAll>>
 rectangle "Close / Open Market" as updateClosed <<updateClosed>>
 rectangle "Update Market Oracle" as updateOracle <<updateOracle>>
 
+/'Controller'/
+rectangle "Add new Product Provider" as createCoordinator <<createCoordinator>>
+rectangle "Update the owner of the Product Provider" as updateCoordinator <<updateCoordinatorPendingOwner>>
+rectangle "Update the treasury address of the Product Provider" as updateTreasury <<updateCoordinatorTreasury>>
+rectangle "Update Protocol Parameters" as UPDATE_PROTOCOL_PARAMS <<protocolParams>> {
+    rectangle "Update Collateral contract address" as updateCollateral <<updateCollateral>>
+    rectangle "Update Incentivizer contract address" as updateIncentivizer <<updateIncentivizer>>
+    rectangle "Update Product Implementation Beacon" as updateProductBeacon <<updateProductBeacon>>
+    rectangle "Update Multi Invoker address" as updateMultiInvoker <<updateMultiInvoker>>
+    rectangle "Update Protocol - Product fee split" as updateProtocolFee <<updateProtocolFee>>
+    rectangle "Update minimum Funding rate" as updateMinFundingRate <<updateMinFundingRate>>
+    rectangle "Update liquidation fee" as updateLiquidationFee <<updateLiquidationFee>>
+    rectangle "Update incentivization fee" as updateIncentivizationFee <<updateIncentivizationFee>>
+    rectangle "Update minimum user collateral" as updateMinCollateral <<updateMinCollateral>>
+    rectangle "Update max incentivization programs per product" as updateProgramsPerProduct <<updateProgramsPerProduct>>
+    rectangle "Update Pauser address" as updatePauser <<updatePauser>>
+}
+rectangle "Pause / Unpause the protocol" as pause <<updatePaused>>
+
 /' //////////////////////////////////////////////////////////////////
 //                           Connections                           //
 ////////////////////////////////////////////////////////////////// '/
@@ -129,6 +157,35 @@ Collateral --> closeAll
 MarketOperator --> updateClosed
 MarketOperator --> updateOracle
 
+'Controller functions'
+createCoordinator --> Controller
+updateCoordinator --> Controller
+updateTreasury --> Controller
+updateCollateral --> Controller
+updateIncentivizer --> Controller
+
+'Calls to Controller functions'
+ProductProvider --> createCoordinator: ?
+ProductProvider --> updateCoordinator
+ProductProvider --> updateTreasury
+Admin --> updateCollateral
+Admin --> updateIncentivizer
+Pauser --> pause
+Admin --> updateProtocolFee
+Admin --> updateMinFundingRate
+Admin --> updateLiquidationFee
+Admin --> updateIncentivizationFee
+Admin --> updateMinCollateral
+Admin --> updateProgramsPerProduct
+Admin --> updateMultiInvoker
+Admin --> updateProductBeacon
+Admin --> updatePauser
+
+'Other'
+updatePauser --> Pauser
+updateMultiInvoker --> MultiInvoker
+updateIncentivizer --> Incentivizer
+
 /' //////////////////////////////////////////////////////////////////
 //                             Notes                               //
 ////////////////////////////////////////////////////////////////// '/
@@ -140,6 +197,7 @@ note right of Market: In V1 known as Product
 note left of Makers: Liquidity Providers
 note left of Takers: Traders
 note bottom of resolveShortfall: Market Operator or Insurer can re-capitalize insolvent market
+note bottom of createCoordinator: This can be called by anyone
 
 footer Perennial Protocol Architecture | author: @kamilchmielu
 @enduml
