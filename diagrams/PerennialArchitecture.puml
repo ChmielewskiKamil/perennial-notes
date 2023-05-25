@@ -94,6 +94,9 @@ rectangle "Updating Core Protocol Parameters" as UPDATE_PROTOCOL_PARAMS {
 }
 rectangle "Pause / Unpause the protocol" as pause <<updatePaused>>
 
+/'MultiInvoker'/
+rectangle "Call multiple protocol functions" as invoke <<invoke>>
+
 /' //////////////////////////////////////////////////////////////////
 //                           Connections                           //
 ////////////////////////////////////////////////////////////////// '/
@@ -149,12 +152,18 @@ ProductProvider --> updateTreasury
 Admin --> UPDATE_PROTOCOL_PARAMS
 Pauser --> pause
 
+'MultiInvoker functions'
+invoke --> MultiInvoker
+
 /' //////////////////////////////////////////////////////////////////
 //                             Notes                               //
 ////////////////////////////////////////////////////////////////// '/
 
 note bottom of settleAccount: Moves collateral within the product 
-note top of settleProduct: Removes collateral\nfrom the product as fees
+note top of settleProduct 
+    Removes collateral
+    from the product as fees
+end note
 note right of MultiInvoker: Allows batch calls
 note right of Market: In V1 known as Product
 note left of Makers: Liquidity Providers
