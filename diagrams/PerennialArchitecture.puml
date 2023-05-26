@@ -16,10 +16,6 @@ skinparam component {
     BackgroundColor lightgray
 }
 
-skinparam collections {
-    FontSize 20
-}
-
 /' Actors '/
 actor Liquidators
 
