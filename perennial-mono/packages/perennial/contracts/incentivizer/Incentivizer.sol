@@ -30,6 +30,8 @@ contract Incentivizer is IIncentivizer, UInitializable, UControllerProvider, URe
         __UReentrancyGuard__initialize();
     }
 
+    /* @audit-issue Shouldn't this check for productInfo.coordinator? 
+        * How do you set the coordinatorId */
     /**
      * @notice Creates a new incentive program
      * @dev Must be called as the product or protocol owner
