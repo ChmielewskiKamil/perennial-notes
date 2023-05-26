@@ -51,20 +51,7 @@ interface IController {
     error ControllerInvalidIncentivizationFeeError();
     error ControllerNotContractAddressError();
 
-    function collateral() external view returns (ICollateral);
-    function incentivizer() external view returns (IIncentivizer);
-    function productBeacon() external view returns (IBeacon);
-    function multiInvoker() external view returns (IMultiInvoker);
-    function coordinators(uint256 collateralId) external view returns (Coordinator memory);
-    function coordinatorFor(IProduct product) external view returns (uint256);
-    function protocolFee() external view returns (UFixed18);
-    function minFundingFee() external view returns (UFixed18);
-    function liquidationFee() external view returns (UFixed18);
-    function incentivizationFee() external view returns (UFixed18);
-    function minCollateral() external view returns (UFixed18);
-    function programsPerProduct() external view returns (uint256);
-    function pauser() external view returns (address);
-    function paused() external view returns (bool);
+    
     function initialize(ICollateral collateral_, IIncentivizer incentivizer_, IBeacon productBeacon_) external;
     function createCoordinator() external returns (uint256);
     function updateCoordinatorPendingOwner(uint256 coordinatorId, address newPendingOwner) external;
@@ -83,6 +70,8 @@ interface IController {
     function updateProgramsPerProduct(uint256 newProductsPerProduct) external;
     function updatePauser(address newPauser) external;
     function updatePaused(bool newPaused) external;
+
+    /* View Functions */
     function isProduct(IProduct product) external view returns (bool);
     function owner() external view returns (address);
     function owner(uint256 coordinatorId) external view returns (address);
@@ -90,4 +79,18 @@ interface IController {
     function treasury() external view returns (address);
     function treasury(uint256 coordinatorId) external view returns (address);
     function treasury(IProduct product) external view returns (address);
+    function collateral() external view returns (ICollateral);
+    function incentivizer() external view returns (IIncentivizer);
+    function productBeacon() external view returns (IBeacon);
+    function multiInvoker() external view returns (IMultiInvoker);
+    function coordinators(uint256 collateralId) external view returns (Coordinator memory);
+    function coordinatorFor(IProduct product) external view returns (uint256);
+    function protocolFee() external view returns (UFixed18);
+    function minFundingFee() external view returns (UFixed18);
+    function liquidationFee() external view returns (UFixed18);
+    function incentivizationFee() external view returns (UFixed18);
+    function minCollateral() external view returns (UFixed18);
+    function programsPerProduct() external view returns (uint256);
+    function pauser() external view returns (address);
+    function paused() external view returns (bool);
 }
