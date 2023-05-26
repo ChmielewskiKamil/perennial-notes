@@ -63,6 +63,7 @@ contract MultiInvoker is IMultiInvoker, UInitializable {
         USDC.approve(address(reserve));
     }
 
+    /* @audit See Pashov's tweet about calldata array as input */
     /**
      * @notice Executes a list of invocations in order
      * @param invocations The list of invocations to execute in order

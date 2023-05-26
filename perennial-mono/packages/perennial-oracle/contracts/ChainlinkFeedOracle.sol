@@ -79,6 +79,8 @@ contract ChainlinkFeedOracle is IOracleProvider {
         }
     }
 
+    /* @audit Why there are 2 sync functions: One in ChainlinkOracle and Second one here? */
+    /* @audit What is the difference between the aggregator and registry */
     /**
      * @notice Checks for a new price and updates the internal phase annotation state accordingly
      * @dev `sync` is expected to be called soon after a phase update occurs in the underlying proxy.

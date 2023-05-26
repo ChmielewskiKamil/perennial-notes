@@ -45,6 +45,8 @@ contract PerennialLens is IPerennialLens {
         _snapshot.paused = controller.paused();
     }
 
+    /* @audit Are the functions below modifying anything? */
+
     /**
      * @notice Returns the snapshots of the provided `productAddresses`
      * @param productAddresses Product addresses
@@ -508,6 +510,7 @@ contract PerennialLens is IPerennialLens {
      *  Modifier Functions
      */
 
+    /* @audit What is the diff between settle account and settle */
     /// @dev Settles the product
     modifier settle(IProduct product) {
         product.settle();

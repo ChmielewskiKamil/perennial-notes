@@ -90,6 +90,7 @@ contract Controller is IController, UInitializable {
         updateProductBeacon(productBeacon_);
     }
 
+    /* @audit Anyone can become the coordinator since there is no access control*/
     /**
      * @notice Creates a new coordinator with `msg.sender` as the owner
      * @return New coordinator ID
@@ -98,6 +99,7 @@ contract Controller is IController, UInitializable {
         return _createCoordinator();
     }
 
+    /* @audit Initial treasury is addr(0), when is this later set to something?*/
     /**
      * @notice Creates a new coordinator with `msg.sender` as the owner
      * @dev `treasury` and `pauser` initialize as the 0-address, defaulting to the `owner`
@@ -144,6 +146,7 @@ contract Controller is IController, UInitializable {
         emit CoordinatorOwnerUpdated(coordinatorId, newPendingOwner);
     }
 
+    /* @audit How does it default to owner, where is it set?*/
     /**
      * @notice Updates the treasury of an existing coordinator
      * @dev Must be called by the coordinator's current owner. Defaults to the coordinator `owner` if set to address(0)
