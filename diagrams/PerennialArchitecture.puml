@@ -20,11 +20,6 @@ skinparam collections {
     FontSize 20
 }
 
-skinparam package {
-    BorderColor black
-    BackgroundColor lightblue
-}
-
 /' Actors '/
 actor Liquidators
 
@@ -73,7 +68,7 @@ rectangle liquidate <<liquidate>>
 rectangle "Settle Account" as collateral_settleAccount <<settleAccount>>
 rectangle "Settle Product" as collateral_settleProduct <<settleProduct>>
 rectangle "Resolve Shortfall" as resolveShortfall <<resolveShortfall>>
-rectangle "Claim Fees" as claimFee <<claimFee>>
+rectangle "Claim Fees" as claimFee <<claimFee>> #yellow
 
 /'Market'/
 rectangle "Open Take Position" as openTake <<openTake>>
@@ -87,11 +82,11 @@ rectangle "Close / Open Market" as updateClosed <<updateClosed>>
 rectangle "Update Market Oracle" as updateOracle <<updateOracle>>
 
 /'Controller'/
-rectangle "Create new Product" as createProduct <<createProduct>>
+rectangle "Create new Product" as createProduct <<createProduct>> #yellow
 rectangle "Add new Product Provider" as createCoordinator <<createCoordinator>>
 rectangle "Update the owner of the Product Provider" as updateCoordinator <<updateCoordinatorPendingOwner>>
 rectangle "Update the treasury address of the Product Provider" as updateTreasury <<updateCoordinatorTreasury>>
-rectangle "Updating Core Protocol Parameters" as UPDATE_PROTOCOL_PARAMS {
+rectangle "Updating Core Protocol Parameters" as UPDATE_PROTOCOL_PARAMS #lightblue {
     rectangle "Update Collateral contract address" as updateCollateral <<updateCollateral>>
     rectangle "Update Incentivizer contract address" as updateIncentivizer <<updateIncentivizer>>
     rectangle "Update Product Implementation Beacon" as updateProductBeacon <<updateProductBeacon>>
