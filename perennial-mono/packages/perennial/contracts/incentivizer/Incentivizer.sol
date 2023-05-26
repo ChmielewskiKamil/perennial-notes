@@ -30,6 +30,7 @@ contract Incentivizer is IIncentivizer, UInitializable, UControllerProvider, URe
         __UReentrancyGuard__initialize();
     }
 
+    /* @audit Why would this be called by the protocol owner? */
     /* @audit-issue Shouldn't this check for productInfo.coordinator? 
         * How do you set the coordinatorId */
     /**
@@ -49,6 +50,9 @@ contract Incentivizer is IIncentivizer, UInitializable, UControllerProvider, URe
         IController _controller = controller();
 
         // Validate
+        /* @audit Revert if coordinator not 0 AND coordinator not product coordinator 
+        * This will pass if coordinatorFor product == 0 
+        * When is the productCoordinator ==0 ??? */
         if (programInfo.coordinatorId != 0 && programInfo.coordinatorId != _controller.coordinatorFor(product))
             revert IncentivizerNotAllowedError(product);
         if (active(product) >= _controller.programsPerProduct())
