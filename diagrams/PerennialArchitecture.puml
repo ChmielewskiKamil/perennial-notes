@@ -2,9 +2,9 @@
 
 left to right direction
 
-skinparam linetype ortho
-skinparam nodesep 40
-skinparam ranksep 40
+skinparam linetype ortho 
+' skinparam nodesep 60
+' skinparam ranksep 30
 
 skinparam note {
     BorderColor black
@@ -30,7 +30,7 @@ actor Liquidators
 actor Makers
 actor Takers
 actor "Market Operator" as MarketOperator
-actor Admin
+actor Admin #green
 actor Pauser
 
 /' //////////////////////////////////////////////////////////////////
@@ -47,9 +47,11 @@ component ChainlinkOracle
 
 component Incentivizer 
 
-component Controller 
+component Controller
 
 component ProductProvider 
+
+component PerennialLens
 
 /' //////////////////////////////////////////////////////////////////
 //                       Contract Functions                        //
@@ -60,8 +62,8 @@ rectangle deposit <<depositTo>>
 rectangle withdrawFrom <<withdrawFrom>>
 rectangle withdrawTo <<withdrawTo>>
 rectangle liquidate <<liquidate>>
-rectangle "Settle Account" as settleAccount <<settleAccount>>
-rectangle "Settle Product" as settleProduct <<settleProduct>>
+rectangle "Settle Account" as collateral_settleAccount <<settleAccount>>
+rectangle "Settle Product" as collateral_settleProduct <<settleProduct>>
 rectangle "Resolve Shortfall" as resolveShortfall <<resolveShortfall>>
 rectangle "Claim Fees" as claimFee <<claimFee>>
 
@@ -70,7 +72,8 @@ rectangle "Open Take Position" as openTake <<openTake>>
 rectangle "Close Take Position" as closeTake <<closeTake>>
 rectangle "Open Make Position" as openMake <<openMake>>
 rectangle "Close Make Position" as closeMake <<closeMake>>
-rectangle "Settle" as settle <<settle>>
+rectangle "Settle" as market_settle <<settle>>
+rectangle "Settle Account" as market_settleAccount <<settleAccount>>
 rectangle "Close All Positions" as closeAll <<closeAll>>
 rectangle "Close / Open Market" as updateClosed <<updateClosed>>
 rectangle "Update Market Oracle" as updateOracle <<updateOracle>>
@@ -97,6 +100,8 @@ rectangle "Pause / Unpause the protocol" as pause <<updatePaused>>
 /'MultiInvoker'/
 rectangle "Call multiple protocol functions" as invoke <<invoke>>
 
+/'PerennialLens'/
+
 /' //////////////////////////////////////////////////////////////////
 //                           Connections                           //
 ////////////////////////////////////////////////////////////////// '/
@@ -107,8 +112,8 @@ withdrawTo --> Collateral
 withdrawFrom --> Collateral
 withdrawTo --> withdrawFrom
 liquidate --> Collateral
-settleAccount --> Collateral
-settleProduct --> Collateral
+collateral_settleAccount --> Collateral
+collateral_settleProduct --> Collateral
 claimFee --> Collateral
 resolveShortfall --> Collateral
 'Calls to Collateral contract functions'
@@ -116,8 +121,8 @@ Makers --> deposit
 Makers --> withdrawTo
 Makers --> withdrawFrom
 Liquidators --> liquidate
-Market --> settleAccount 
-Market --> settleProduct 
+Market --> collateral_settleAccount 
+Market --> collateral_settleProduct 
 MarketOperator --> resolveShortfall
 
 'Market functions'
@@ -125,7 +130,8 @@ openMake --> Market
 closeMake --> Market
 openTake --> Market
 closeTake --> Market
-settle --> Market
+market_settle --> Market
+market_settleAccount --> Market
 closeAll --> Market
 updateClosed --> Market
 updateOracle --> Market
@@ -137,6 +143,8 @@ Takers --> closeTake
 Collateral --> closeAll
 MarketOperator --> updateClosed
 MarketOperator --> updateOracle
+PerennialLens --> market_settle
+PerennialLens --> market_settleAccount
 
 'Controller functions'
 createCoordinator --> Controller
@@ -159,8 +167,8 @@ invoke --> MultiInvoker
 //                             Notes                               //
 ////////////////////////////////////////////////////////////////// '/
 
-note bottom of settleAccount: Moves collateral within the product 
-note top of settleProduct 
+note bottom of collateral_settleAccount: Moves collateral within the product 
+note top of collateral_settleProduct 
     Removes collateral
     from the product as fees
 end note
@@ -170,6 +178,11 @@ note left of Makers: Liquidity Providers
 note left of Takers: Traders
 note bottom of resolveShortfall: Market Operator or Insurer can re-capitalize insolvent market
 note bottom of createCoordinator: This can be called by anyone
+note bottom of market_settle: Global settlement flywheel
+note right of Controller
+    This contract is used to create new markets
+    and control global protocol parameters.
+end note
 
 footer Perennial Protocol Architecture | author: @kamilchmielu
 @enduml
