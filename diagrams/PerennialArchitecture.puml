@@ -27,11 +27,19 @@ skinparam package {
 
 /' Actors '/
 actor Liquidators
-actor Makers
-actor Takers
+
+together {
+    actor Makers
+    actor Takers
+}
+
 actor "Market Operator" as MarketOperator
-actor Admin #green
-actor Pauser
+
+together {
+    actor Admin #green
+    actor Pauser #green
+}
+
 
 /' //////////////////////////////////////////////////////////////////
 //                           Core Contracts                        //
@@ -49,7 +57,7 @@ component Incentivizer
 
 component Controller
 
-component ProductProvider 
+component CoordinatorDelegatable 
 
 component PerennialLens
 
@@ -79,6 +87,7 @@ rectangle "Close / Open Market" as updateClosed <<updateClosed>>
 rectangle "Update Market Oracle" as updateOracle <<updateOracle>>
 
 /'Controller'/
+rectangle "Create new Product" as createProduct <<createProduct>>
 rectangle "Add new Product Provider" as createCoordinator <<createCoordinator>>
 rectangle "Update the owner of the Product Provider" as updateCoordinator <<updateCoordinatorPendingOwner>>
 rectangle "Update the treasury address of the Product Provider" as updateTreasury <<updateCoordinatorTreasury>>
@@ -99,6 +108,11 @@ rectangle "Pause / Unpause the protocol" as pause <<updatePaused>>
 
 /'MultiInvoker'/
 rectangle "Call multiple protocol functions" as invoke <<invoke>>
+
+/'Incentivizer'/
+rectangle "Create incentive program" as incentivizer_create <<create>>
+
+/'CoordinatorDelegatable'/
 
 /'PerennialLens'/
 
@@ -147,6 +161,7 @@ PerennialLens --> market_settle
 PerennialLens --> market_settleAccount
 
 'Controller functions'
+createProduct --> Controller
 createCoordinator --> Controller
 updateCoordinator --> Controller
 updateTreasury --> Controller
@@ -154,14 +169,24 @@ UPDATE_PROTOCOL_PARAMS --> Controller
 pause --> Controller
 
 'Calls to Controller functions'
-ProductProvider --> createCoordinator: ?
-ProductProvider --> updateCoordinator
-ProductProvider --> updateTreasury
+CoordinatorDelegatable --> createCoordinator
+CoordinatorDelegatable --> updateCoordinator
+CoordinatorDelegatable --> updateTreasury
 Admin --> UPDATE_PROTOCOL_PARAMS
 Pauser --> pause
 
 'MultiInvoker functions'
 invoke --> MultiInvoker
+
+'Incentivizer functions'
+incentivizer_create --> Incentivizer
+
+'Calls to Incentivizer functions'
+MarketOperator --> incentivizer_create
+
+'Other'
+MarketOperator .-> CoordinatorDelegatable
+Admin .-> Pauser
 
 /' //////////////////////////////////////////////////////////////////
 //                             Notes                               //
@@ -182,6 +207,10 @@ note bottom of market_settle: Global settlement flywheel
 note right of Controller
     This contract is used to create new markets
     and control global protocol parameters.
+end note
+note bottom of CoordinatorDelegatable
+    Market Coordinator can either be an EOA (Market Operator) 
+    or a contract (CoordinatorDelegatable).
 end note
 
 footer Perennial Protocol Architecture | author: @kamilchmielu
