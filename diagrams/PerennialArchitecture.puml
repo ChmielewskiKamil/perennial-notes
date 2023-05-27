@@ -43,6 +43,8 @@ component MultiInvoker
 
 component ChainlinkOracle 
 
+component ChainlinkFeedOracle
+
 component Incentivizer 
 
 component Controller
@@ -105,6 +107,9 @@ rectangle "Create incentive program" as incentivizer_create <<create>>
 /'CoordinatorDelegatable'/
 
 /'PerennialLens'/
+
+/'ChainlinkOracle'/
+rectangle "Check the price & update phase if applicable" as oracleSync <<sync>>
 
 /' //////////////////////////////////////////////////////////////////
 //                           Connections                           //
@@ -175,9 +180,13 @@ incentivizer_create --> Incentivizer
 'Calls to Incentivizer functions'
 MarketOperator --> incentivizer_create
 
+'ChainlinkOracle functions'
+oracleSync --> ChainlinkOracle
+
 'Other'
 MarketOperator .-> CoordinatorDelegatable
 Admin .-> Pauser
+ChainlinkOracle .-. ChainlinkFeedOracle
 
 /' //////////////////////////////////////////////////////////////////
 //                             Notes                               //
@@ -202,6 +211,9 @@ end note
 note bottom of CoordinatorDelegatable
     Market Coordinator can either be an EOA (Market Operator) 
     or a contract (CoordinatorDelegatable).
+end note
+note top of ChainlinkFeedOracle
+    ChainlinkFeedOracle is only used when Chainlink Feed Registry is not available.
 end note
 
 footer Perennial Protocol Architecture @b06d5145db62a312dd88dfcafef0f8e2166c5e32 | author: @kamilchmielu
