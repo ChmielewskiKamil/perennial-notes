@@ -78,7 +78,7 @@ rectangle "Close / Open Market" as updateClosed <<updateClosed>>
 rectangle "Update Market Oracle" as updateOracle <<updateOracle>>
 
 /'Controller'/
-rectangle "Create new Product" as createProduct <<createProduct>> #yellow
+rectangle "Create new Product" as createProduct <<createProduct>>
 rectangle "Add new Product Provider" as createCoordinator <<createCoordinator>>
 rectangle "Update the owner of the Product Provider" as updateCoordinator <<updateCoordinatorPendingOwner>>
 rectangle "Update the treasury address of the Product Provider" as updateTreasury <<updateCoordinatorTreasury>>
@@ -163,6 +163,7 @@ pause --> Controller
 CoordinatorDelegatable --> createCoordinator
 CoordinatorDelegatable --> updateCoordinator
 CoordinatorDelegatable --> updateTreasury
+CoordinatorDelegatable --> createProduct
 Admin --> UPDATE_PROTOCOL_PARAMS
 Pauser --> pause
 
