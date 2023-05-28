@@ -9,7 +9,9 @@ skinparam note {
     BorderColor black
     BackgroundColor white
     FontColor black
+    BackgroundColor <<?>> #WhiteSmoke
 }
+
 skinparam component {
     FontSize 25
     BackgroundColor lightgray
@@ -30,14 +32,15 @@ together {
     actor Pauser #green
 }
 
-
 /' //////////////////////////////////////////////////////////////////
 //                           Core Contracts                        //
 ////////////////////////////////////////////////////////////////// '/
 
 component Market
 
-component Collateral
+component Collateral {
+    hexagon "DSU tokens" as collateral_DSU <<ERC20>> #white
+}
 
 component MultiInvoker 
 
@@ -215,6 +218,16 @@ end note
 note top of ChainlinkFeedOracle
     ChainlinkFeedOracle is only used when Chainlink Feed Registry is not available.
 end note
+note bottom of claimFee
+    According to Sherlock Audit 08.30 L-10: This is supposed to be called 
+    by the ProtocolTreasury or respective ProductTreasury addressses.
+end note
+
+/' //////////////////////////////////////////////////////////////////
+//                          Attack Vector Ideas                    //
+////////////////////////////////////////////////////////////////// '/
+
+note right of collateral_DSU #Plum: Is the approve uint256.max needed to deposit collateral?
 
 footer Perennial Protocol Architecture @b06d5145db62a312dd88dfcafef0f8e2166c5e32 | author: @kamilchmielu
 @enduml
