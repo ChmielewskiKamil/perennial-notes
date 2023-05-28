@@ -5,6 +5,12 @@ import "@openzeppelin/contracts/utils/math/SafeCast.sol";
 import "./interfaces/IOracleProvider.sol";
 import "./types/ChainlinkAggregator.sol";
 
+/* @audit Why are they not using the SequencerUptimeFeed for Arbitrum: 
+ * https://docs.chain.link/data-feeds/l2-sequencer-feeds */
+
+/* @audit Judging from the deployment script, it would seem that ChainlinkFeedOracle is only used
+* when the FeedRegistry is not available. ChainlinkFeedOracle is then deployed and takes an aggregator
+* as constructor parameter. */
 /**
  * @title ChainlinkFeedOracle
  * @notice Chainlink feed implementation of the IOracle interface.
@@ -79,6 +85,7 @@ contract ChainlinkFeedOracle is IOracleProvider {
         }
     }
 
+    /* @audit This is a complex piece of code, might be bug in there */
     /* @audit Why there are 2 sync functions: One in ChainlinkOracle and Second one here? */
     /* @audit What is the difference between the aggregator and registry */
     /**

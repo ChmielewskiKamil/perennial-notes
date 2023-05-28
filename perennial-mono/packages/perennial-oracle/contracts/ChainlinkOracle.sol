@@ -6,6 +6,7 @@ import "@openzeppelin/contracts/utils/math/SafeCast.sol";
 import "./interfaces/IOracleProvider.sol";
 import "./types/ChainlinkRegistry.sol";
 
+/* @audit This is the Feed Price consumer (Feed registry example from chainlink website) */
 /**
  * @title ChainlinkOracle
  * @notice Chainlink registry implementation of the IOracle interface.
@@ -33,6 +34,7 @@ contract ChainlinkOracle is IOracleProvider {
         uint128 startingRoundId;
     }
 
+    /* @audit In the deployment script base: ETH, quote: USD*/
     /**
      * @notice Initializes the contract state
      * @param registry_ Chainlink price feed registry
@@ -44,6 +46,7 @@ contract ChainlinkOracle is IOracleProvider {
         base = base_;
         quote = quote_;
 
+        /* @audit Wtf is this xd?*/
         // phaseId is 1-indexed, skip index 0
         _phases.push(Phase(uint128(0), uint128(0)));
         // phaseId is 1-indexed, first phase starts as version 0
@@ -52,6 +55,8 @@ contract ChainlinkOracle is IOracleProvider {
         _decimalOffset = SafeCast.toInt256(10 ** registry_.decimals(base, quote));
     }
 
+    /* @audit The price returned by this func is a single number: F18Fixed 
+    * How do you calculate the price given the base and quote? */
     /**
      * @notice Checks for a new price and updates the internal phase annotation state accordingly
      * @return The current oracle version after sync
